@@ -1,6 +1,6 @@
 
 /* eslint-disable react/prop-types */
-export default function Post(props) {
+export function Post(props) {
   return (
     <>
       <strong>{props.author}</strong>
