@@ -1,5 +1,5 @@
 import Post from "./components/Post";
-import "./styles.css"
+import "./global.css"
 
 
 function App() {
