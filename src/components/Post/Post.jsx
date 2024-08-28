@@ -1,6 +1,6 @@
+/* eslint-disable no-unused-vars */
 import styles from "./Post.module.css";
 
- 
 export function Post(props) {
   return (
     <article className={styles.post}>
@@ -29,10 +29,12 @@ export function Post(props) {
           no NLW Return, evento da Rocketseat. O nome do projeto é DoctorCare 🚀
         </p>
         <p>
-          👉 <a href="">jane.design/doctorcare</a>
+          <a href="">jane.design/doctorcare</a>
         </p>
         <p>
-          <a href="">#novoprojeto #nlw #rocketseat</a>
+          <a href="">#novoprojeto</a>{" "}
+          <a href="">#nlw</a>{" "}
+          <a href="">#rocketseat</a>
         </p>
       </div>
     </article>
