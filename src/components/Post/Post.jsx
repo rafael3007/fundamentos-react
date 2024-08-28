@@ -1,56 +1,145 @@
-/* eslint-disable no-unused-vars */
 import { Avatar } from "../Avatar/Avatar";
 import { Comment } from "../Comment/Comment";
 import styles from "./Post.module.css";
+import { useState } from "react";
+import { dateFormatToNow, dateFormattPublished } from "../../utils/format-date";
 
-export function Post(props) {
+export function Post({ author, content, publishedAt }) {
+  const [comments, setComments] = useState([
+    {
+      id: "41",
+      author: {
+        avatarUrl: "https://github.com/rafael3007.png",
+        name: "Rafael Brito",
+      },
+      content: "comentário 1",
+      publishedAt: new Date(),
+    },
+    {
+      id: "42",
+      author: {
+        avatarUrl: "https://github.com/rodfrutuoso.png",
+        name: "Rodriguinho",
+      },
+      content: "comentário 2",
+      publishedAt: new Date(),
+    },
+    {
+      id: "43",
+      author: {
+        avatarUrl: "https://github.com/JoaoVittorL.png",
+        name: "Joãozinho",
+      },
+      content: "comentário 3",
+      publishedAt: new Date(),
+    },
+  ]);
+
+  const [newComment, setNewComment] = useState({
+    id: "5" + comments.length.toString(),
+    author: {
+      avatarUrl: "https://github.com/rafael3007.png",
+      name: "Rafael Brito",
+    },
+    content: "",
+    publishedAt: new Date(),
+  });
+
+  const publishedDateFormatted = dateFormattPublished(publishedAt);
+
+  const publishedDateRelativeToNow = dateFormatToNow(publishedAt);
+
+  const handleRemoveComment = (id) => {
+    setComments(comments.filter((_, index) => index != id));
+  };
+
+  const handleAddComment = () => {
+    setComments([...comments, newComment]);
+    setNewComment({
+      author: {
+        avatarUrl: "https://github.com/rafael3007.png",
+        name: "Rafael Brito",
+      },
+      content: "",
+      publishedAt: new Date(),
+    });
+  };
+
   return (
     <article className={styles.post}>
       <header>
         <div className={styles.author}>
-          <Avatar
-            className={styles.avatar}
-            src="https://github.com/rafael3007.png"
-            alt=""
-          />
+          <Avatar className={styles.avatar} src={author.avatarUrl} alt="" />
           <div className={styles.authorInfo}>
-            <strong>Rafael Brito</strong>
-            <span>Web Developer</span>
+            <strong>{author.name}</strong>
+            <span>{author.role}</span>
           </div>
         </div>
 
-        <time title="11 de maio às 08:13" dateTime="2022-05-11 08:00:03">
-          publicado há 1hr
+        <time
+          title={publishedDateFormatted}
+          dateTime={publishedAt.toISOString()}
+        >
+          {publishedDateRelativeToNow}
         </time>
       </header>
 
       <div className={styles.content}>
-        <p>Fala galeraa 👋</p>
-        <p>
-          Acabei de subir mais um projeto no meu portifa. É um projeto que fiz
-          no NLW Return, evento da Rocketseat. O nome do projeto é DoctorCare 🚀
-        </p>
-        <p>
-          <a href="">jane.design/doctorcare</a>
-        </p>
-        <p>
-          <a href="">#novoprojeto</a> <a href="">#nlw</a>{" "}
-          <a href="">#rocketseat</a>
-        </p>
+        {content.map((row) => {
+          if (row.type === "paragraph") {
+            return <p key={row.id}>{row.content}</p>;
+          } else {
+            return (
+              <a key={row.id} href={row.link ?? ""}>
+                {row.content}
+              </a>
+            );
+          }
+        })}
       </div>
 
-      <form className={styles.commentForm}>
+      <form className={styles.commentForm} onSubmit={(e) => e.preventDefault()}>
         <strong>Deixe seu feddback</strong>
-        <textarea placeholder="Deixe um comentário" />
+        <textarea
+          placeholder="Deixe um comentário"
+          value={newComment.content}
+          onChange={(event) =>
+            setNewComment({
+              author: {
+                avatarUrl: "https://github.com/rafael3007.png",
+                name: "Rafael Brito",
+              },
+              content: event.target.value,
+              publishedAt: new Date(),
+            })
+          }
+        />
         <footer>
-          <button type="submit">Publicar</button>
+          <button
+            type="submit"
+            onClick={handleAddComment}
+            onKeyDown={handleAddComment}
+          >
+            Publicar
+          </button>
         </footer>
       </form>
 
       <div className={styles.commentList}>
-        <Comment />
-        <Comment />
-        <Comment />
+        {comments.length > 0 ? (
+          comments.map((comment, i) => (
+            <Comment
+              key={comment.id}
+              index={i}
+              publishedAt={comment.publishedAt}
+              comment={comment.content}
+              author={comment.author}
+              RemoveComment={handleRemoveComment}
+            />
+          ))
+        ) : (
+          <p>Ainda não há comentários</p>
+        )}
       </div>
     </article>
   );
