@@ -49,21 +49,46 @@ export function Post({ author, content, publishedAt }) {
 
   const publishedDateRelativeToNow = dateFormatToNow(publishedAt);
 
-  const handleRemoveComment = (id) => {
-    setComments(comments.filter((_, index) => index != id));
-  };
+  const isNewCommentEmpty = newComment.content === "";
 
-  const handleAddComment = () => {
-    setComments([...comments, newComment]);
-    setNewComment({
+  function handleRemoveComment(id) {
+    const commentsWithoutDeletedOne = comments.filter(
+      (_, index) => index != id
+    );
+    setComments(commentsWithoutDeletedOne);
+  }
+
+  function handleAddComment() {
+    const updateNewComment = {
+      id: "9" + comments.length.toString(),
       author: {
         avatarUrl: "https://github.com/rafael3007.png",
         name: "Rafael Brito",
       },
       content: "",
       publishedAt: new Date(),
-    });
-  };
+    };
+    setComments([...comments, newComment]);
+    setNewComment(updateNewComment);
+  }
+
+  function handleNewCommentChange() {
+    const NewComment = {
+      author: {
+        avatarUrl: "https://github.com/rafael3007.png",
+        name: "Rafael Brito",
+      },
+      content: event.target.value,
+      publishedAt: new Date(),
+    };
+
+    event.target.setCustomValidity("");
+    setNewComment(NewComment);
+  }
+
+  function handleNewCommentInvalid() {
+    event.target.setCustomValidity("Por favor, preencha o campo de comentário");
+  }
 
   return (
     <article className={styles.post}>
@@ -103,22 +128,16 @@ export function Post({ author, content, publishedAt }) {
         <textarea
           placeholder="Deixe um comentário"
           value={newComment.content}
-          onChange={(event) =>
-            setNewComment({
-              author: {
-                avatarUrl: "https://github.com/rafael3007.png",
-                name: "Rafael Brito",
-              },
-              content: event.target.value,
-              publishedAt: new Date(),
-            })
-          }
+          onChange={handleNewCommentChange}
+          onInvalid={handleNewCommentInvalid}
+          required
         />
         <footer>
           <button
             type="submit"
             onClick={handleAddComment}
             onKeyDown={handleAddComment}
+            disabled={isNewCommentEmpty}
           >
             Publicar
           </button>
@@ -134,7 +153,7 @@ export function Post({ author, content, publishedAt }) {
               publishedAt={comment.publishedAt}
               comment={comment.content}
               author={comment.author}
-              RemoveComment={handleRemoveComment}
+              onRemoveComment={handleRemoveComment}
             />
           ))
         ) : (

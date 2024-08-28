@@ -4,12 +4,24 @@ import { Avatar } from "../Avatar/Avatar";
 import { useState } from "react";
 import { dateFormatToNow, dateFormattPublished } from "../../utils/format-date";
 
-export function Comment({ index, publishedAt, comment, author, RemoveComment}) {
-  const [likes, setLikes] = useState(0);
+export function Comment({
+  index,
+  publishedAt,
+  comment,
+  author,
+  onRemoveComment,
+}) {
+  const [likeCount, setlikeCount] = useState(0);
 
   const publishedDateFormatted = dateFormattPublished(publishedAt);
 
-  const publishedDateRelativeToNow = dateFormatToNow(publishedAt)
+  const publishedDateRelativeToNow = dateFormatToNow(publishedAt);
+
+  function handleLikeComment() {
+    setlikeCount((state) => {
+      return state + 1;
+    });
+  }
 
   return (
     <div className={styles.comment}>
@@ -28,16 +40,19 @@ export function Comment({ index, publishedAt, comment, author, RemoveComment}) {
               </time>
             </div>
 
-            <button title="Deletar comentário" onClick={()=>RemoveComment(index)}>
+            <button
+              title="Deletar comentário"
+              onClick={() => onRemoveComment(index)}
+            >
               <Trash size={24} />
             </button>
           </header>
           <p>{comment}</p>
         </div>
         <footer>
-          <button onClick={() => setLikes(likes + 1)}>
+          <button onClick={handleLikeComment}>
             <ThumbsUp size={20} />
-            Aplaudir<span>{likes}</span>
+            Aplaudir<span>{likeCount}</span>
           </button>
         </footer>
       </div>
