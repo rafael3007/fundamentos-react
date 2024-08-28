@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+import { Avatar } from "../Avatar/Avatar";
 import { Comment } from "../Comment/Comment";
 import styles from "./Post.module.css";
 
@@ -7,7 +8,7 @@ export function Post(props) {
     <article className={styles.post}>
       <header>
         <div className={styles.author}>
-          <img
+          <Avatar
             className={styles.avatar}
             src="https://github.com/rafael3007.png"
             alt=""
@@ -51,7 +52,6 @@ export function Post(props) {
         <Comment />
         <Comment />
       </div>
-
     </article>
   );
 }
